@@ -2,7 +2,7 @@ from collections import Counter
 from zipfile import ZipFile
 import zipfile
 import re
-import os
+
 
 kWORDS = re.compile("[a-z]{4,}")
 
@@ -29,7 +29,8 @@ def words(text):
     characters in the range a-z or A-Z.  The resulting words should be
     lower case.
     """
-
+    print(text)
+    print(kWORDS.finditer(text))
     
 
 
@@ -45,14 +46,14 @@ def accumulate_counts(words, total=Counter()):
     @total The total counter we should add the counts to
     """
     assert isinstance(total, Counter)
-    total = Counter.update()
+    #total = Counter.update()
     # Modify this function    
     return total
 
 if __name__ == "__main__":
     # You should not need to modify this part of the code
     total = Counter()
-    for tt in text_from_zipfile("../data/test.zip"):
+    for tt in text_from_zipfile("../data/state_union.zip"):
         total = accumulate_counts(words(tt), total)
 
     for ii, cc in total.most_common(100):
