@@ -32,6 +32,8 @@ def district_margins(statelines):
                     #Convert to a float
                     percent = float(ss["GENERAL %"].replace(",",".").replace("%",""))
                     # Put in a dictionary with districts as keys and the value is a list of the general % for that district 
+                    # setdefault takes a key and a default value, and returns either associated value, or if there is no current value, the default value. 
+                    # In this case, we will either get an empty or populated list, which we then append the current value to.
                     dictionary.setdefault(d,[]).append(percent)
 
     #print(dictionary)
