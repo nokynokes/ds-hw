@@ -4,7 +4,7 @@ import heapq
 
 kHEADER = ["STATE", "DISTRICT", "MARGIN"]
 
-def district_margins(statelines):
+def district_margins(state_lines):
     """
     Return a dictionary with districts as keys, and the difference in
     percentage between the winner and the second-place as values.
@@ -12,13 +12,13 @@ def district_margins(statelines):
     @lines The csv rows that correspond to the districts of a single state
     """
     # convert generator expression so we can properly read it 
-    state_lines = list(statelines)
+    # ßstate_lines = list(statelines)
     MAX = 0.0
     percentages = {}
     #print(list(state_lines))
 
     # get a list of all the dictritcs for a state (no duplicates)
-    districts = sorted(set(x["D"] for x in state_lines if x["D"]))
+    districts = {x["D"] for x in state_lines if x["D"]}
     dictionary = {}
 
     # Loop thru distritcs
@@ -70,7 +70,8 @@ def all_states(lines):
     """
 
     # Complete this function
-    return set(x["STATE"] for x in lines if x["STATE"])
+    # using set comprehensions to avoid duplicates and so we dont return a generator expression
+    return {x["STATE"] for x in lines if x["STATE"]}
 
 def all_state_rows(lines, state):
     """
@@ -81,8 +82,8 @@ def all_state_rows(lines, state):
     """
 
     # Complete/correct this function
-
-    return (x for x in lines if x["STATE"] == state)
+    # using list comperhensions so we dont return a generator expression
+    return [x for x in lines if x["STATE"] == state]
 
 if __name__ == "__main__":
     # You shouldn't need to modify this part of the code
