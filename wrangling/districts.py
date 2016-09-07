@@ -26,7 +26,7 @@ def district_margins(state_lines):
         # Loop thru rows
         for ss in state_lines:
             # Match a row with what ever district we are looking at
-            if d == ss["D"] and ss["D"] and not (ss["D"] == "H" or " - " in ss["D"]):
+            if d == ss["D"] and ss["D"] and not (ss["D"] == "H" or "01 - UNEXPIRED TERM" == ss["D"]):
                 # Check if GENERAL % isnt empty
                 if ss["GENERAL %"] and ss["GENERAL %"].strip():
                     #Convert to a float
@@ -34,7 +34,10 @@ def district_margins(state_lines):
                     # Put in a dictionary with districts as keys and the value is a list of the general % for that district 
                     # setdefault takes a key and a default value, and returns either associated value, or if there is no current value, the default value. 
                     # In this case, we will either get an empty or populated list, which we then append the current value to.
-                    dictionary.setdefault(d,[]).append(percent)
+                    if "01 - FULL TERM" == d:
+                        dictionary.setdefault('1',[]).append(percent)
+                    else:
+                        dictionary.setdefault(d,[]).append(percent)
 
     #print(dictionary)
     # Loop through dictionary to find the "winner" (aka max)

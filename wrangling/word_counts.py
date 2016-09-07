@@ -30,12 +30,11 @@ def words(text):
     lower case.
     """
     print(text)
-    print(kWORDS.finditer(text))
-    
-
-
-    # Modify this function
-    return text.lower().split()
+    lst = list(kWORDS.findall(text.lower()))
+    if lst:
+        return lst
+    else:
+        return []
 
 def accumulate_counts(words, total=Counter()):
     """
