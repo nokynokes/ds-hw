@@ -1,5 +1,6 @@
 from collections import Counter
 from zipfile import ZipFile
+import zipfile
 import re
 
 kWORDS = re.compile("[a-z]{4,}")
@@ -9,8 +10,13 @@ def text_from_zipfile(zip_file):
     Given a zip file, yield an iterator over the text in each file in the
     zip file.
     """
-    # Modify this function
-    return ["nope"]
+    with zipfile.ZipFile(zip_file, "r") as zip:
+        for filename in zip.namelist():
+            with zip.open(filename) as file:
+                for line in file:
+                    yield line
+                 
+    #return ["nope"]
 
 def words(text):
     """
@@ -18,6 +24,9 @@ def words(text):
     characters in the range a-z or A-Z.  The resulting words should be
     lower case.
     """
+
+    #with open(text) as file:
+
     # Modify this function
     return text.lower().split()
 
@@ -30,7 +39,7 @@ def accumulate_counts(words, total=Counter()):
     @total The total counter we should add the counts to
     """
     assert isinstance(total, Counter)
-
+    total = Counter.update()
     # Modify this function    
     return total
 
