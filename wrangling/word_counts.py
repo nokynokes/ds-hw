@@ -2,6 +2,7 @@ from collections import Counter
 from zipfile import ZipFile
 import zipfile
 import re
+import os
 
 kWORDS = re.compile("[a-z]{4,}")
 
@@ -10,13 +11,13 @@ def text_from_zipfile(zip_file):
     Given a zip file, yield an iterator over the text in each file in the
     zip file.
     """
+
     with zipfile.ZipFile(zip_file, "r") as zip:
         for filename in zip.namelist():
-            with zip.open(filename) as file:
-                for line in file:
-                    yield line
-                 
-    #return ["nope"]
+            with zip.open(filename) as f:
+                for line in f:
+                    yield str(line,'utf-8')
+    
 
 def words(text):
     """
@@ -26,6 +27,7 @@ def words(text):
     """
 
     #with open(text) as file:
+
 
     # Modify this function
     return text.lower().split()
@@ -46,7 +48,7 @@ def accumulate_counts(words, total=Counter()):
 if __name__ == "__main__":
     # You should not need to modify this part of the code
     total = Counter()
-    for tt in text_from_zipfile("../data/state_union.zip"):
+    for tt in text_from_zipfile("../data/test.zip"):
         total = accumulate_counts(words(tt), total)
 
     for ii, cc in total.most_common(100):
