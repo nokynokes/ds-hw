@@ -11,11 +11,15 @@ def text_from_zipfile(zip_file):
     Given a zip file, yield an iterator over the text in each file in the
     zip file.
     """
-
+    # Open the zip file
     with zipfile.ZipFile(zip_file, "r") as zip:
+        # iterate through the files
         for filename in zip.namelist():
+            # open the files inside the zip
             with zip.open(filename) as f:
+                # interate thru the lines
                 for line in f:
+                    # convert the lines from bytes to string (utf-8 encoding), then yield as an iterator 
                     yield str(line,'utf-8')
     
 
@@ -26,7 +30,7 @@ def words(text):
     lower case.
     """
 
-    #with open(text) as file:
+    
 
 
     # Modify this function
