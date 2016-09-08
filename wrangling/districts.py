@@ -38,7 +38,6 @@ def district_margins(state_lines):
                     # In this case, we will either get an empty or populated list, which we then append the current value to.
                     if " - FULL TERM" in d:
                         key = d.replace("0","").replace(" - FULL TERM","")
-                        #print(key + " " + d + " " + ss["STATE"])
                         dictionary.setdefault(key,[]).append(percent)
                     else:
                         dictionary.setdefault(d,[]).append(percent)
@@ -46,7 +45,7 @@ def district_margins(state_lines):
     #print(dictionary)
     # Loop through dictionary to find the "winner" (aka max)
     for key in dictionary:
-        #print(dictionary[key])
+        # Since West Virginia only has 3 districts but 8 on the csv file, this not conditional will make sure we dont add it
         if len(dictionary[key]) > 1 and not (state == "West Virginia" and key == '5'):
             for GE in dictionary[key]:
                 if GE > MAX: 
@@ -62,12 +61,11 @@ def district_margins(state_lines):
                     MAX = GE
 
             second = MAX
-            #diff = winner - second
-            #print(diff)
+            
             percentages[int(key)] = winner - second
         elif state == "West Virginia" and key == '3':
-            #print(winner)
             percentages[int(key)] = 10.700000000000003
+        # Since West Virginia only has 3 districts but 8 on the csv file, this not conditional will make sure we dont add it
         elif not (state == "West Virginia" and key == '5'):
             percentages[int(key)] = dictionary[key][0]
     
