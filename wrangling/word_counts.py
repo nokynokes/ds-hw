@@ -21,8 +21,8 @@ def text_from_zipfile(zip_file):
                 # interate thru the lines
                 for line in f:
                     # convert the lines from bytes to string (utf-8 encoding), then yield as an iterator 
-                    yield str(line,'utf-8')
-    
+                    # Ant
+                    yield str(line,"utf-8",errors='ignore')
 
 def words(text):
     """
@@ -52,7 +52,7 @@ def accumulate_counts(words, total=Counter()):
 
     total.update(words)
     # Modify this function 
-    print(total)   
+    #print(total)   
     return total
 
 if __name__ == "__main__":
