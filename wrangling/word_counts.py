@@ -15,6 +15,7 @@ def text_from_zipfile(zip_file):
     with zipfile.ZipFile(zip_file, "r") as zip:
         # iterate through the files
         for filename in zip.namelist():
+            #print(filename)
             # open the files inside the zip
             with zip.open(filename) as f:
                 # interate thru the lines
@@ -29,7 +30,7 @@ def words(text):
     characters in the range a-z or A-Z.  The resulting words should be
     lower case.
     """
-    print(text)
+    #print(text)
     lst = list(kWORDS.findall(text.lower()))
     if lst:
         return lst
@@ -45,8 +46,13 @@ def accumulate_counts(words, total=Counter()):
     @total The total counter we should add the counts to
     """
     assert isinstance(total, Counter)
-    #total = Counter.update()
-    # Modify this function    
+    # dictionary = dict(total.up)
+    # print(dictionary)
+    # for key in dictionary:
+
+    total.update(words)
+    # Modify this function 
+    print(total)   
     return total
 
 if __name__ == "__main__":

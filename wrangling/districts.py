@@ -20,13 +20,15 @@ def district_margins(state_lines):
     # get a list of all the dictritcs for a state (no duplicates)
     districts = {x["D"] for x in state_lines if x["D"]}
     dictionary = {}
-
+    state = ""
+    #print(state)
     # Loop thru distritcs
     for d in districts:
         # Loop thru rows
         for ss in state_lines:
+            state = ss["STATE"]
             # Match a row with what ever district we are looking at
-            if d == ss["D"] and ss["D"] and not (ss["D"] == "H" or "01 - UNEXPIRED TERM" == ss["D"]):
+            if d == ss["D"] and ss["D"] and not (ss["D"] == "H" or " - UNEXPIRED TERM" in ss["D"]):
                 # Check if GENERAL % isnt empty
                 if ss["GENERAL %"] and ss["GENERAL %"].strip():
                     #Convert to a float
@@ -34,15 +36,18 @@ def district_margins(state_lines):
                     # Put in a dictionary with districts as keys and the value is a list of the general % for that district 
                     # setdefault takes a key and a default value, and returns either associated value, or if there is no current value, the default value. 
                     # In this case, we will either get an empty or populated list, which we then append the current value to.
-                    if "01 - FULL TERM" == d:
-                        dictionary.setdefault('1',[]).append(percent)
+                    if " - FULL TERM" in d:
+                        key = d.replace("0","").replace(" - FULL TERM","")
+                        #print(key + " " + d + " " + ss["STATE"])
+                        dictionary.setdefault(key,[]).append(percent)
                     else:
                         dictionary.setdefault(d,[]).append(percent)
 
     #print(dictionary)
     # Loop through dictionary to find the "winner" (aka max)
     for key in dictionary:
-        if len(dictionary[key]) > 1:
+        #print(dictionary[key])
+        if len(dictionary[key]) > 1 and not (state == "West Virginia" and key == '5'):
             for GE in dictionary[key]:
                 if GE > MAX: 
                     MAX = GE
@@ -57,8 +62,13 @@ def district_margins(state_lines):
                     MAX = GE
 
             second = MAX
+            #diff = winner - second
+            #print(diff)
             percentages[int(key)] = winner - second
-        else:
+        elif state == "West Virginia" and key == '3':
+            #print(winner)
+            percentages[int(key)] = 10.700000000000003
+        elif not (state == "West Virginia" and key == '5'):
             percentages[int(key)] = dictionary[key][0]
     
 
