@@ -21,7 +21,7 @@ def text_from_zipfile(zip_file):
                 # interate thru the lines
                 for line in f:
                     # convert the lines from bytes to string (utf-8 encoding), then yield as an iterator 
-                    # Ant
+                    # Anticipating a UnicodeDecodeError
                     yield str(line,"utf-8",errors='ignore')
 
 def words(text):
@@ -30,7 +30,6 @@ def words(text):
     characters in the range a-z or A-Z.  The resulting words should be
     lower case.
     """
-    #print(text)
     lst = list(kWORDS.findall(text.lower()))
     if lst:
         return lst
