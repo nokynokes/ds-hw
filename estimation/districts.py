@@ -57,7 +57,6 @@ def log_probability(value, mean, variance):
 
     # Your code here
     return 0.0
-
 def republican_share(lines, states):
     """
     Return an iterator over the Republican share of the vote in all
