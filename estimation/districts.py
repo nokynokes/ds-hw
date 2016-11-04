@@ -5,7 +5,12 @@
 from csv import DictReader
 from collections import defaultdict
 from math import log
+from math import sqrt 
+from math import exp
 from math import pi as kPI
+import numpy
+import matplotlib.pyplot as plt
+import math
 
 kOBAMA = set(["D.C.", "Hawaii", "Vermont", "New York", "Rhode Island",
               "Maryland", "California", "Massachusetts", "Delaware", "New Jersey",
@@ -56,7 +61,10 @@ def log_probability(value, mean, variance):
     """
 
     # Your code here
-    return 0.0
+    denominator = sqrt(2*kPI*variance)
+    exponent = -((value-mean) ** 2)/(2*variance)
+
+    return(log((1/denominator) * exp(exponent)))
 def republican_share(lines, states):
     """
     Return an iterator over the Republican share of the vote in all
@@ -68,15 +76,19 @@ def republican_share(lines, states):
     for state in states:
       for row in lines:
         if state == row["STATE"]:
-          if row["GE WINNER INDICATOR"] == "W" and not ("UNEXPIRED TERM" in row["D"]) and (row["PARTY"] == "R" or row["PARTY"] == "D" or row["PARTY"] == "R/TRP"):
+          if row["GENERAL %"] and row["D"] and row["PARTY"] == "R":
             district = row["D"]
             if "FULL TERM" in district:
               district = district.replace("0","").replace(" - FULL TERM","")
-            # print(row["STATE"] + " " +  row["D"] + " " + row["GENERAL %"])
-            if row["GENERAL %"]:
-              dict[(state,int(district))] = float(row["GENERAL %"].replace(",",".").replace("%",""))
-            else:
-              dict[(state,int(district))] = 100.00
+            elif "UNEXPIRED TERM" in district:
+              district = district.replace(" - UNEXPIRED TERM","").replace("0","")
+
+              # what to do if general % is empty?
+          
+            dict[(state,int(district))] = float(row["GENERAL %"].replace(",",".").replace("%",""))
+
+            
+  
     return dict
 
 if __name__ == "__main__":

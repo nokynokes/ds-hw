@@ -60,7 +60,7 @@ class BigramLanguageModel:
         
         # Add your code here!
         # Bigram counts
-        self._obs_counts = defaultdict(Counter)
+        self._allWords = {}
         self._vocab_final = False
 
     def train_seen(self, word):
@@ -71,20 +71,32 @@ class BigramLanguageModel:
         assert not self._vocab_final, \
             "Trying to add new words to finalized vocab"
 
-        # Add your code here!            
+        # Add your code here!
+        self._vocab.add(word)
+
 
     def generate(self, context):
         """
         Given the previous word of a context, generate a next word from its
         conditional language model probability.  
         """
-
+        
+        
+        maxLaplace = 0.0
+        wordToReturn = ""
+        if context in self._allWords:
+            for word in self._allWords[context]:
+                temp = self.laplace(context,word)
+                if temp > maxLaplace:
+                    maxLaplace = temp
+                    wordToReturn = word
+           
         # Add your code here.  Make sure to the account for the case
         # of a context you haven't seen before and Don't forget the
         # smoothing "+1" term while sampling.
 
         # Your code here
-        return "the"
+        return word
             
     def sample(self, sample_size):
         """
@@ -145,9 +157,28 @@ class BigramLanguageModel:
         assert context in self._vocab, "%s not in vocab" % context
         assert word in self._vocab, "%s not in vocab" % word
 
+
         # Add your code here
-        val = 0.0
-        return val
+        length = len(self._vocab)
+        bigramFreq = 0
+        unigramFreq = 0
+
+
+
+        ## Key errors arise from <s> an </s> ?
+        if context in self._allWords:
+            if word in self._allWords[context]:
+                bigramFreq = self._allWords[context][word]
+            else: 
+                bigramFreq = 0
+            for unigrams in self._allWords[context].values():
+                unigramFreq += unigrams
+        else:
+            bigramFreq = 0
+            unigramFreq = 0
+
+
+        return log(float(bigramFreq + 1)/(unigramFreq + length))
 
     def add_train(self, sentence):
         """
@@ -157,17 +188,29 @@ class BigramLanguageModel:
         # You'll need to complete this function, but here's a line of code that
         # will hopefully get you started.
         for context, word in bigrams(list(self.tokenize_and_censor(sentence))):
-            None
             # ---------------------------------------
             assert word in self._vocab, "%s not in vocab" % word
+            try:
+                self._allWords[context][word] += 1
+            except KeyError:
+                if context in self._allWords:
+                    self._allWords[context][word] = 1
+                else:
+                    self._allWords[context] = {word : 1}
+
 
     def log_likelihood(self, sentence):
+
         """
         Compute the log likelihood of a sentence, divided by the number of
         tokens in the sentence.
         """
-        
-        return 0.0
+        val = 1.0
+        counter = 0.0
+        for context, word in bigrams(list(self.tokenize_and_censor(sentence))):
+            counter += 1.0
+            val *= exp(self.laplace(context,word))
+        return log(val)/counter
 
 
 if __name__ == "__main__":
@@ -184,8 +227,15 @@ if __name__ == "__main__":
         
         for sent in sentences_from_zipfile("../data/state_union.zip", pres):
             target.add_train(sent)
-    
         print("Trained language model for %s" % name)
+        
+
+    generateD = dem_lm.sample(5)
+    for x in generateD:
+        print(x)
+    generateR = rep_lm.sample(5)
+    for x in generateR:
+        print(x)
 
     with open("../data/2016-obama.txt") as infile:
         print("REP\t\tDEM\t\tSentence\n" + "=" * 80)
